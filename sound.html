@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스마트 제어 시스템 - 소리 모니터</title>
+    <style>
+        /* 기본 모바일 최적화 스타일링 (이전과 동일) */
+        body { font-family: sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 500px; margin: 0 auto; }
+        h1 { text-align: center; font-size: 22px; color: #1a73e8; margin-bottom: 25px; }
+        
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .card h2 { margin-top: 0; font-size: 16px; color: #5f6368; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; margin-bottom: 15px; }
+
+        /* --- 소리 센서 전용 스타일 --- */
+        .sound-monitor { text-align: center; }
+        
+        /* 실시간 dB 수치 */
+        .db-display { font-size: 48px; font-weight: bold; margin: 10px 0; color: #202124; }
+        .db-unit { font-size: 20px; font-weight: normal; color: #5f6368; }
+
+        /* 색상이 변하는 시각적 인디케이터 (막대그래프 형태) */
+        .color-indicator-bar {
+            width: 100%;
+            height: 15px;
+            border-radius: 7.5px;
+            background-color: #e0e0e0; /* 기본 배경색 */
+            overflow: hidden;
+            position: relative;
+            margin-top: 15px;
+        }
+        
+        /* 실제 색상이 차오르는 부분 */
+        #color-fill {
+            height: 100%;
+            width: 0%; /* 처음엔 0% */
+            background-color: rgba(255, 77, 77, 1); /* 초기 빨간색 */
+            transition: width 0.3s ease, background-color 0.3s ease; /* 부드러운 변화 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>소리 센서 모니터링</h1>
+        
+        <div class="card">
+            <h2>실시간 데시벨 (dB) 측정</h2>
+            <div class="sound-monitor">
+                <div id="db-value" class="db-display">00<span class="db-unit"> dB</span></div>
+                
+                <div class="color-indicator-bar">
+                    <div id="color-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+    <script>
+        const MIN_DB = 30; // 측정 가능한 최소 dB (조용한 방)
+        const MAX_DB = 110; // 측정 가능한 최대 dB (공사장 소음)
+
+        // 화면 요소 가져오기
+        const dbValueEl = document.getElementById('db-value');
+        const colorFillEl = document.getElementById('color-fill');
+
+        /**
+         * dB 값을 입력받아 R->G->B 순서의 색상을 계산하는 함수
+         * @param {number} db - 데시벨 값 (30~110)
+         * @returns {string} hsl() 형태의 색상값
+         */
+        function calculateColorFromDb(db) {
+            // 1. 데시벨 범위를 0~1 사이의 비율로 정규화 (보정)
+            let normalized = (db - MIN_DB) / (MAX_DB - MIN_DB);
+            if (normalized < 0) normalized = 0;
+            if (normalized > 1) normalized = 1;
+
+            // 2. R->G->B 순서로 변환 (HSL 색상 모델 활용)
+            // HSL 모델에서 H값(색상)은 0(빨강) -> 120(초록) -> 240(파랑) 순서입니다.
+            // 데시벨 비율(0~1)을 H값(0~240)으로 매핑합니다.
+            let hue = normalized * 240; // 0 (빨강)에서 240 (파랑) 사이
+
+            return `hsl(${hue}, 80%, 55%)`; // 채도 80%, 밝기 55% 고정
+        }
+
+        // --- 실시간 시뮬레이션 (실제 하드웨어 연결 전 테스트용) ---
+        // 2초마다 가상의 dB 값을 만들어서 업데이트합니다.
+        setInterval(() => {
+            // 가상의 dB 생성 (40dB ~ 100dB 사이의 랜덤값)
+            let simulatedDb = Math.floor(40 + Math.random() * 60);
+            
+            // 1. 수치 업데이트
+            dbValueEl.innerHTML = simulatedDb + `<span class="db-unit"> dB</span>`;
+            
+            // 2. 색상 계산
+            let targetColor = calculateColorFromDb(simulatedDb);
+            
+            // 3. 인디케이터 스타일 업데이트 (색상 & 비율)
+            colorFillEl.style.backgroundColor = targetColor;
+            
+            // dB 비율에 맞춰 바의 너비도 변경
+            let widthPercent = ((simulatedDb - MIN_DB) / (MAX_DB - MIN_DB)) * 100;
+            colorFillEl.style.width = widthPercent + '%';
+            
+            // 💡 추후 Micro:bit 등에서 데이터를 받으면 이 안에서 simulatedDb 대신 센서값을 넣으면 됩니다.
+            console.log(`현재 데시벨: ${simulatedDb}dB, 적용 색상: ${targetColor}`);
+        }, 1500); // 1.5초마다 갱신
+    </script>
+</body>
+</html>

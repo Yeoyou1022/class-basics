@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3채널 제어 시스템</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        /* 버튼 공통 스타일 */
+        .control-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            margin-bottom: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.2s ease;
+        }
+
+        /* 끄짐 상태 (기본 회색) */
+        .off {
+            background-color: #7f8c8d;
+        }
+
+        /* 켜짐 상태 (녹색) */
+        .on {
+            background-color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <h2>장치 개별 제어 (3개)</h2>
+            
+            <button id="btn1" class="control-btn off" onclick="toggleButton(this)">1번 장치 가동</button>
+            <button id="btn2" class="control-btn off" onclick="toggleButton(this)">2번 장치 가동</button>
+            <button id="btn3" class="control-btn off" onclick="toggleButton(this)">3번 장치 가동</button>
+        </div>
+    </div>
+
+    <script>
+        // 버튼의 상태를 토글하는 핵심 함수
+        function toggleButton(element
+            // 현재 버튼에 'off' 클래스가 포함되어 있는지 확인
+            if (element.classList.contains('off')) {
+                // 켜짐 상태로 변경
+                element.classList.remove('off');
+                element.classList.add('on');
+                element.innerText = element.id.replace('btn', '') + "번 장치 가동중";
+                
+                // 💡 나중에 기기 제어할 때 활용할 로그
+                console.log(element.id + "번 켜짐 (ON)");
+            } else {
+                // 꺼짐 상태로 변경
+                element.classList.remove('on');
+                element.classList.add('off');
+                element.innerText = element.id.replace('btn', '') + "번 장치 가동";
+                
+                console.log(element.id + "번 꺼짐 (OFF)");
+            }
+        }
+    </script>
+
+</body>
+</html>

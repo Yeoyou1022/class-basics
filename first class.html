@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML 첫걸음 대시보드</title>
+
+    <style>
+        /* 화면 전체의 배경색을 정합니다. */
+        body {
+            background-color: #f5f5f5;
+            text-align: center;
+            font-family: sans-serif;
+        }
+        /* 박스(카드) 모양의 디자인을 만듭니다. */
+        .box {
+            background-color: white;
+            width: 300px;
+            margin: 50px auto; /* 화면 중앙에 배치 */
+            padding: 20px;
+            border-radius: 10px; /* 모서리를 둥글게 */
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1); /* 그림자 효과 */
+        }
+        /* 글자 색상을 바꿉니다. */
+        h1 { color: #333333; }
+        
+        /* 버튼의 기본 디자인을 정합니다. */
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db; /* 파란색 */
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h1>스마트폰 제어</h1>
+        <p>아래 버튼을 누르면 글자 색이 바뀝니다.</p>
+        
+        <button onclick="changeColor()">색상 바꾸기</button>
+    </div>
+
+    <script>
+        // 색상을 바꾼다는 명령(함수)을 정의합니다.
+        function changeColor() {
+            // 1. HTML 안에 있는 <h1> 태그(제목)를 찾아서 가져옵니다.
+            const title = document.querySelector('h1');
+            
+            // 2. 그 제목의 글자 색상(style.color)을 '빨간색'으로 바꿉니다.
+            title.style.color = '#e74c3c';
+            
+            // 3. 잘 작동하는지 개발자 창(로그)에 기록을 남깁니다.
+            console.log("버튼이 클릭되어 글자 색상이 빨갛게 변했습니다!");
+        }
+    </script>
+
+</body>
+</html>
